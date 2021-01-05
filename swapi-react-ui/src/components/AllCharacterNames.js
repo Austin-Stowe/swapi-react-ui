@@ -6,29 +6,34 @@ import TextField from '@material-ui/core/TextField'
 import PropTypes from 'prop-types'
 
 const AllCharacterNames = () => {
-    const [characterArray, setCharacterArray] = useState([])
-    const [fetchingCharacterData, setFetchingCharacterData] = useState(true)
 
     const URL = 'https://swapi.dev/api/people/';
-
+    let initialArr = [];
+    const [characterArray, setCharacterArray] = useState([])
+    const [fetchingCharacterData, setFetchingCharacterData] = useState(true)
     const fetchData = (apiUrl) => {
         fetch(apiUrl)
         .then(res=>res.json())
         .then(data => {
             apiUrl = data['next'];
-            setCharacterArray(prevArray => prevArray.concat(data['results']))
+            console.log(data['count'])
+            initialArr = [...initialArr, data['results']]
             // Check next API url is empty or not, if not empty call the above function 
-            if(apiUrl !== '' && apiUrl !== null && fetchingCharacterData && characterArray.length !== data['count']){
+            if(apiUrl !== '' && apiUrl !== null){
                 fetchData(apiUrl);
             } else {
                 setFetchingCharacterData(false)
             }
         })
+        const mergedArr = [].concat(...initialArr)
+        setCharacterArray(mergedArr)
     }   
 
     useEffect(()=>{ 
         fetchData(URL)
-    });
+    },[]);
+
+    const printArray = ()=>{console.log(characterArray)}
 
     return(
         <>
@@ -38,9 +43,12 @@ const AllCharacterNames = () => {
                 name='characterDropdown'
                 fullWidth={true}
                 loading={fetchingCharacterData}
+                loadingText='Loading characters...'
                 getOptionLabel= {idx => idx.name}
-                renderInput={(params) => <TextField {...params} variant="outlined"/>}
+                style={{backgroundColor:'#FFE81F', fontWeight:'bold'}}
+                renderInput={(params) => <TextField {...params} variant="outlined" style={{fontWeight:'bold'}}/>}
             />
+            <button onClick={printArray}>Print</button>
         </>
     )
     
