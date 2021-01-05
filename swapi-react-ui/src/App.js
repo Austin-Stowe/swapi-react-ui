@@ -3,18 +3,15 @@ import './App.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Button from 'react-bootstrap/Button'
+import Container from '@material-ui/core/Container'
 
 import AllCharacterNames from './components/AllCharacterNames'
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <AllCharacterNames />
-        <Button variant="primary" size="lg">Press me!</Button>
-      </header> 
-    </div>
+    <Container maxWidth="xl">
+      <AllCharacterNames />
+    </Container>
   );
 }
 
