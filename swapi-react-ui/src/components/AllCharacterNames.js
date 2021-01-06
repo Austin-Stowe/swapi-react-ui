@@ -7,32 +7,34 @@ import PropTypes from 'prop-types'
 
 const AllCharacterNames = () => {
 
-    const URL = 'https://swapi.dev/api/people/';
-    let initialArr = [];
-    const [characterArray, setCharacterArray] = useState([])
+    const PEOPLE_URL = 'https://swapi.dev/api/people/';
     const [fetchingCharacterData, setFetchingCharacterData] = useState(true)
-    const fetchData = (apiUrl) => {
-        fetch(apiUrl)
-        .then(res=>res.json())
-        .then(data => {
-            apiUrl = data['next'];
-            console.log(data['count'])
-            initialArr = [...initialArr, data['results']]
-            // Check next API url is empty or not, if not empty call the above function 
-            if(apiUrl !== '' && apiUrl !== null){
-                fetchData(apiUrl);
-            } else {
-                setFetchingCharacterData(false)
-            }
-        })
-        const mergedArr = [].concat(...initialArr)
-        setCharacterArray(mergedArr)
-    }   
+    const [characterArray, setCharacterArray] = useState(async ()=>{
+        let initialArr = [];
+        async function fetchPeopleData(URL){
+            fetch(URL)
+            .then(res => res.json())
+            .then(data => {
+                initialArr = initialArr.concat(data['results'])
+                URL = data['next']
+                if(URL !== '' && URL !== null){
+                    fetchPeopleData(URL)
+                } else {
+                    setFetchingCharacterData(false)
+                }
+            })
+            .then(data=>{
+                if(!fetchingCharacterData && initialArr.length === data['count']){
+                    console.log('should be here')
+                }
+            })
+        }
+        
+        fetchPeopleData(PEOPLE_URL)
+        console.log(initialArr)
+    })
 
-    useEffect(()=>{ 
-        fetchData(URL)
-    },[]);
-
+    useEffect(()=>{console.log(characterArray)}, [fetchingCharacterData])
     const printArray = ()=>{console.log(characterArray)}
 
     return(
@@ -43,11 +45,13 @@ const AllCharacterNames = () => {
                 name='characterDropdown'
                 fullWidth={true}
                 loading={fetchingCharacterData}
+                disabled={fetchingCharacterData}
                 loadingText='Loading characters...'
                 getOptionLabel= {idx => idx.name}
                 style={{backgroundColor:'#FFE81F', fontWeight:'bold'}}
                 renderInput={(params) => <TextField {...params} variant="outlined" style={{fontWeight:'bold'}}/>}
             />
+            <div>{fetchingCharacterData ? 'FETCHING': 'DONE'}</div>
             <button onClick={printArray}>Print</button>
         </>
     )
