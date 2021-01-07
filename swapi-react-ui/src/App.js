@@ -1,20 +1,22 @@
 import logo from './logo.svg';
 import './App.css';
 
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from "react-query/devtools";
+
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-import Button from 'react-bootstrap/Button'
+import People from './components/People/People'
 
-import AllCharacterNames from './components/AllCharacterNames'
+const queryClient = new QueryClient()
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <AllCharacterNames />
-        <Button variant="primary" size="lg">Press me!</Button>
-      </header> 
-    </div>
+    <QueryClientProvider client={queryClient}>
+      <People />
+      <ReactQueryDevtools initialIsOpen/>
+    </QueryClientProvider>
   );
 }
 
