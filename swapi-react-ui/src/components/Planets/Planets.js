@@ -7,14 +7,14 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import Person from './Person'
+import Planet from './Planet'
 
 
-const People = ({ pageNum }) => {
+const Planets = ({ pageNum }) => {
 
-    const { data, status } = useQuery(['people' ,pageNum], 
+    const { data, status } = useQuery(['planets' ,pageNum], 
     () => 
-        fetch(`http://swapi.dev/api/people/?page=${pageNum}`).then(res => res.json()), 
+        fetch(`http://swapi.dev/api/planets/?page=${pageNum}`).then(res => res.json()), 
     {
         keepPreviousData: true
     })
@@ -37,7 +37,7 @@ const People = ({ pageNum }) => {
                         <Row>
                             <Col>
                                 {data.results.map(
-                                    idx => <Person key={Math.random()} person={idx}/>
+                                    idx => <Planet key={Math.random()} planet={idx}/>
                                 )}
                             </Col>
                         </Row>
@@ -48,4 +48,4 @@ const People = ({ pageNum }) => {
     );
 }
 
-export default People;
+export default Planets;
