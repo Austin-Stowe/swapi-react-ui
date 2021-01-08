@@ -7,18 +7,21 @@ import Jumbotron from 'react-bootstrap/Jumbotron'
 
 const Person = ({ person }) => {
     const phsyicalCharacteristics = {
-        [person.height]: ' [cm]',
-        [person.mass]: ' [kg]',
-        [person.hair_color]: null,
-        [person.skin_color]: null,
-        [person.eye_color]: null,
-        [person.gender]: ' [binary]'
+        [person.height]: '[cm]',
+        [person.mass]: '[kg]',
+        [person.hair_color]: 'hair',
+        [person.skin_color]: 'skin',
+        [person.eye_color]: 'eyes',
+        [person.gender]: ''
     }
+
+    const birthYear = person.birth_year;
 
     return(
         <>
         <Jumbotron>
             <h1>{person.name}</h1>
+            <h2><em>Born during the year {birthYear}</em></h2>
             <Container>
                 <Row>
                     <Col>
@@ -28,10 +31,10 @@ const Person = ({ person }) => {
                 {
                     Object.keys(phsyicalCharacteristics)
                     .map((key) => 
-                        <Row>
+                        <Row key={key}>
                             <Col>
                             {key.toString().charAt(0).toUpperCase() + key.toString().slice(1)}
-                            {phsyicalCharacteristics[key]}
+                            {' ' +phsyicalCharacteristics[key]}
                             </Col>
                         </Row>
                         )
